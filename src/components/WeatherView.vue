@@ -1,50 +1,74 @@
 <template>
 <div class="weatherView">
    <h1>Weather</h1> 
-   {{weather}}
-
-   <table>
-       <tr>
-           <th>City</th>
-           <td>{{cityName}}</td>
-       </tr>
-        <tr>
-           <th>LAT</th>
-           <td>{{lat}}</td>
-           </tr>
-            <tr>
-           <th>LON</th>
-           <td>{{lon}}</td>
-       </tr>
-   </table>
+   <div class="cityPicker">
+       <input type="text" v-model="cityName">
+       <button @click="getLocation">SZUKAJ</button>
    </div>
+
+  
+    <div class="currentWeather">
+           <h2>CURRENT WEATHER</h2>
+           <WeatherSingle :current="current" />
+       </div>
+       <div class="dailyWeather">
+           <h2>DAILY WEATHER</h2>
+
+           <div class="dailyWrapper">
+               <div class="daily" v-for="day in daily" :key="day.dt">
+                   <WeatherSingle :current="day"/>
+
+               </div>
+           </div>
+       </div>
+   </div>
+   
 </template>
 
 <script>
 
 
+import WeatherSingle from './WeatherSingle.vue';
 export default {
     name: 'WeatherView',
+    components: {
+    WeatherSingle: WeatherSingle,
+    
+},
     data(){
         return{
-            cityName: "",
+            cityName: "Katowice",
             lat: "",
-            lon: ""
+            lon: "",
+            current: {},
+            currentCity: "",
+            daily: []
 
         }
     },
     methods:{
-        getWeather(){
-            console.log("getWeather")
+        getWeather(lat,lon){
+            console.log("getWeather");
+           fetch("https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+lon+"&exclude=minutely,hourly,alerts&units=metric&appid=04d03c358e8933ac6823da54c340c97b")
+
+            .then(dt => dt.json())
+            .then(dt =>{
+                console.log(dt)
+                this.daily = dt.daily;
+                this.current = dt.current;
+            })
         },
         getLocation(cityName){
             console.log(cityName)
-            fetch("http://api.openweathermap.org/geo/1.0/direct?q="+cityName+"&appid=04d03c358e8933ac6823da54c340c97b")
+            fetch("http://api.openweathermap.org/geo/1.0/direct?q="+this.cityName+"&appid=04d03c358e8933ac6823da54c340c97b")
             .then(dt => dt.json())
             .then (dt => {
+                console.log(dt[0])
                 this.cityName = dt[0].name;
-                this.cityName = dt[0].lat;
-                this.cityName = dt[0].lon;
+                this.currentCity = dt[0].name;
+                this.lat = dt[0].lat;
+                this.lon = dt[0].lon;
+                this.getWeather(dt[0].lat, dt[0].lon);
 
 
                // console.log(dt[0])
@@ -61,4 +85,14 @@ export default {
 </script>
 <style>
 
+ .dailyWrapper{
+    display:flex;
+    justify-content: center;
+    flex-wrap:wrap;
+    
+  }
+
+  .item{
+      padding: 10px;
+  }
 </style>
