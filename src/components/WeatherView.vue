@@ -22,7 +22,7 @@
            </div>
        </div>
    </div>
-   
+   <img class="img" src="people.jpg">
 </template>
 
 <script>
@@ -60,7 +60,7 @@ export default {
         },
         getLocation(cityName){
             console.log(cityName)
-            fetch("http://api.openweathermap.org/geo/1.0/direct?q="+this.cityName+"&appid=04d03c358e8933ac6823da54c340c97b")
+            fetch("https://api.openweathermap.org/geo/1.0/direct?q="+this.cityName+"&appid=04d03c358e8933ac6823da54c340c97b")
             .then(dt => dt.json())
             .then (dt => {
                 console.log(dt[0])
@@ -84,7 +84,14 @@ export default {
 }
 </script>
 <style>
-
+.weatherView{
+    .cityPicker{
+        input{
+            padding: 0.5em;
+            font-size:2em;
+        }
+    }
+}
  .dailyWrapper{
     display:flex;
     justify-content: center;
@@ -94,5 +101,19 @@ export default {
 
   .item{
       padding: 10px;
+  }
+  .img{
+    width:40em;
+    height:25em;
+    @media(max-width: 768px){
+    max-width: 100%;
+    width: unset;
+    height: unset;
+    }
+   
+  }
+
+  body{
+      background-color:;
   }
 </style>

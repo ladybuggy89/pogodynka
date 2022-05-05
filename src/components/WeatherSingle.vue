@@ -7,7 +7,7 @@
     <div class="icon">
       <img
         v-if="current.weather?.[0].icon"
-        :src="'http://openweathermap.org/img/wn/'+current.weather?.[0].icon+'@2x.png'"
+        :src="'https://openweathermap.org/img/wn/'+current.weather?.[0].icon+'@2x.png'"
         alt="Ikona pogody">
     </div>
   </div>
@@ -34,6 +34,14 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 
+.item{
+    .icon{
+        img{
+            width: 100px;
+            height: 100px;
+        }
+    }
+}
 </style>
